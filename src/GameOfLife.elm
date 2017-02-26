@@ -25,6 +25,12 @@ type alias Position =
     ( X, Y )
 
 
+type LifeCycle
+    = Dies
+    | Revives
+    | Same
+
+
 type alias Cell =
     ( Position, State )
 
@@ -33,10 +39,37 @@ type alias Universe =
     List Cell
 
 
-type LifeCycle
-    = Dies
-    | Revives
-    | Same
+type alias ViewPort =
+    { xMin : X
+    , yMin : Y
+    , xMax : X
+    , yMax : Y
+    , cellSize : Int
+    }
+
+
+type alias Model =
+    { universe : Universe
+    , viewPort : ViewPort
+    , running : Bool
+    }
+
+
+type Msg
+    = NoOp
+    | Evolve
+    | UpdateUniverse String
+    | ToggleRunning
+    | ZoomOut
+    | ZoomIn
+    | Left
+    | Right
+    | Down
+    | Up
+
+
+
+-- INIT PROCESS
 
 
 toPosition : Int -> Int -> Char -> Cell
@@ -189,9 +222,30 @@ applyRules cell neighbours =
 -- utils
 
 
+evolve : Universe -> Universe
+evolve universe =
+    universe
+        |> List.map (evolveCell universe)
+
+
+evolveCell : Universe -> Cell -> Cell
+evolveCell universe cell =
+    let
+        ( position, _ ) =
+            cell
+
+        neighbours =
+            findNeighbours universe position
+
+        evolveCell =
+            applyRules cell neighbours
+    in
+        evolveCell
+
+
 updateState : Cell -> State -> Cell
 updateState cell state =
-    Tuple.mapSecond (\_ -> state) cell
+    Tuple.mapSecond (always state) cell
 
 
 numberOfLiving : List Cell -> Int
@@ -220,3 +274,12 @@ findNeighbours : Universe -> Position -> List Cell
 findNeighbours universe position =
     universe
         |> List.filter (isNeighbour position << Tuple.first)
+
+
+
+-- View
+
+
+selectRow : Universe -> ViewPort -> List Cell
+selectRow universe viewPort =
+    []
