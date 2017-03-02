@@ -87,7 +87,7 @@ type Msg
 toPosition : Int -> Int -> Char -> Cell
 toPosition x y state =
     case state of
-        '0' ->
+        'O' ->
             ( ( x, y ), Alive )
 
         _ ->
@@ -471,7 +471,7 @@ viewCell size ( ( x, y ), state ) =
         [ classList [ ( Cell, True ), ( LiveCell, state == Alive ), ( DeadCell, state == Dead ) ]
         , style <| cellSize state size
         ]
-        [ Html.text ((toString x) ++ "," ++ (toString y)) ]
+        [ Html.text (toString state) ]
 
 
 { id, class, classList } =
