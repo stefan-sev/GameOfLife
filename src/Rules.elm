@@ -149,8 +149,8 @@ isAlive ( ( x, y ), state ) =
 
 
 equals : Cell -> Cell -> Bool
-equals ( ( x, y ), _ ) ( ( x2, y2 ), _ ) =
-    x == x2 && y == y2
+equals ( position1, _ ) ( position2, _ ) =
+    position1 == position2
 
 
 isNeighbour : Position -> Position -> Bool
